@@ -15,6 +15,9 @@ services:
     depends_on:
       - db
       - qdrant
+    networks:
+      - n8n-docker_default
+
 
   db:
     image: postgres:16-alpine
@@ -37,3 +40,7 @@ services:
 volumes:
   linkedink_db_data:
   linkedink_qdrant_data:
+
+networks:
+   n8n-docker_default:
+     external: true
