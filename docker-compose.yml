@@ -1,0 +1,39 @@
+services:
+  linkedink:
+    build: .
+    container_name: linkedink
+    restart: always
+    ports:
+      - "3006:3000"
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/linkedink
+      - QDRANT_URL=http://qdrant:6333
+      - NEXTAUTH_URL=http://localhost:3006/Linkedink
+    depends_on:
+      - db
+      - qdrant
+
+  db:
+    image: postgres:16-alpine
+    container_name: linkedink-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=linkedink
+    volumes:
+      - linkedink_db_data:/var/lib/postgresql/data
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: linkedink-qdrant
+    restart: always
+    volumes:
+      - linkedink_qdrant_data:/qdrant/storage
+
+volumes:
+  linkedink_db_data:
+  linkedink_qdrant_data:

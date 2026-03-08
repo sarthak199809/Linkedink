@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #F5F0E8;
+  --primary: #000000;
+  --accent: #FFE500;
+  --danger: #FF3B30;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.brutal-card {
+  background: white;
+  border: 3px solid var(--primary);
+  box-shadow: 4px 4px 0px var(--primary);
+}
+
+.brutal-card:hover {
+  box-shadow: 6px 6px 0px var(--primary);
+}
+
+.brutal-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.brutal-btn:hover {
+  box-shadow: 4px 4px 0px var(--primary);
+  transform: translate(-2px, -2px);
+}
+
+.brutal-btn-accent {
+  background: var(--accent);
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.brutal-btn-danger {
+  background: var(--danger);
+  color: white;
+  border: 2px solid var(--primary);
+}
+
+.brutal-input {
+  border: 2px solid var(--primary);
+  border-radius: 0;
+  padding: 12px 16px;
+  width: 100%;
+  background: white;
+  font-family: 'Inter', sans-serif;
+}
+
+.brutal-input:focus {
+  outline: none;
+  border: 3px solid var(--primary);
+}
+
+.brutal-tag {
+  background: var(--accent);
+  border: 1.5px solid var(--primary);
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.brutal-tag:hover {
+  transform: rotate(-1deg);
+}
+
+.loading-bar {
+  height: 8px;
+  background: var(--primary);
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+@keyframes loading {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

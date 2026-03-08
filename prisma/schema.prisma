@@ -1,0 +1,72 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  password       String
+  name           String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  apiKeys        ApiKey[]
+  frameworks     Framework[]
+  generatedPosts GeneratedPost[]
+}
+
+model ApiKey {
+  id        String    @id @default(uuid())
+  userId    String
+  provider  String    @default("gemini")
+  apiKey    String
+  isValid   Boolean   @default(false)
+  testedAt  DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Framework {
+  id             String          @id @default(uuid())
+  userId         String
+  title          String
+  summary        String
+  bestFor        String?
+  tags           String[]
+  toneProfile    String[]
+  fullData       Json
+  qdrantPointId  String?
+  sourcePostUrl  String?
+  sourcePostText String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generatedPosts GeneratedPost[]
+}
+
+model GeneratedPost {
+  id            String    @id @default(uuid())
+  userId        String
+  frameworkId   String
+  ideaInput     String
+  generatedPost String
+  matchScore    Float?
+  wasEdited     Boolean   @default(false)
+  finalPost     String?
+  createdAt     DateTime  @default(now())
+  framework     Framework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReverseEngineerPrompt {
+  id         String   @id @default(uuid())
+  promptText String
+  version    Int      @default(1)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+}
