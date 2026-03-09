@@ -9,17 +9,17 @@ services:
       - .env.local
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/linkedink
+      # Updated the hostname from 'db' to 'linkedink-db'
+      - DATABASE_URL=postgresql://postgres:postgres@linkedink-db:5432/linkedink
       - QDRANT_URL=http://qdrant:6333
-      - NEXTAUTH_URL=http://localhost:3006/Linkedink
+      - NEXTAUTH_URL=https://yourdomain.com/Linkedink # Update this to your actual domain if using Caddy
     depends_on:
-      - db
+      - linkedink-db
       - qdrant
     networks:
       - n8n-docker_default
 
-
-  db:
+  linkedink-db:
     image: postgres:16-alpine
     container_name: linkedink-db
     restart: always
@@ -29,6 +29,8 @@ services:
       - POSTGRES_DB=linkedink
     volumes:
       - linkedink_db_data:/var/lib/postgresql/data
+    networks:
+      - n8n-docker_default
 
   qdrant:
     image: qdrant/qdrant:latest
@@ -36,11 +38,13 @@ services:
     restart: always
     volumes:
       - linkedink_qdrant_data:/qdrant/storage
+    networks:
+      - n8n-docker_default
 
 volumes:
   linkedink_db_data:
   linkedink_qdrant_data:
 
 networks:
-   n8n-docker_default:
-     external: true
+  n8n-docker_default:
+    external: true
