@@ -54,42 +54,50 @@ export default function GeneratePage() {
   if (result) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="brutal-card p-8 mb-8 bg-white border-black">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl text-green-600">✓</span>
-            <h2 className="text-2xl font-bold uppercase tracking-tight">Writing Match Confirmed</h2>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="brutal-tag bg-accent">{result.framework.title}</span>
-            <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">
-              {Math.round(result.score * 100)}% Match Confidence
-            </span>
+        {/* Match Info */}
+        <div className="card p-6 mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
+              <span className="text-xl">✓</span>
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-heading">Writing Match Confirmed</h2>
+              <div className="flex items-center gap-3 mt-1">
+                <span className="brutal-tag text-[11px]">{result.framework.title}</span>
+                <span className="text-xs font-semibold text-muted">
+                  {Math.round(result.score * 100)}% Match Confidence
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="brutal-card p-10 bg-white border-black shadow-2xl relative">
-          <div className="absolute top-[-15px] left-8 bg-black text-white px-4 py-1 text-xs font-bold uppercase tracking-widest">
-            Generated Output
+        {/* Generated Post */}
+        <div className="card p-8 relative">
+          <div className="absolute top-4 right-4">
+            <span className="text-[10px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
+              Generated Output
+            </span>
           </div>
-          <div className="whitespace-pre-wrap font-body text-lg leading-relaxed mb-10 text-gray-800">
+          <div className="whitespace-pre-wrap font-body text-[15px] leading-relaxed mb-8 text-heading pt-4">
             {result.post}
           </div>
 
-          <div className="flex flex-wrap gap-4 pt-8 border-t-2 border-dashed border-gray-200">
+          <div className="flex flex-wrap gap-3 pt-6 border-t border-border">
             <button
               onClick={() => {
                 handleCopy();
                 alert("Copied to clipboard!");
               }}
-              className="brutal-btn min-w-[200px]"
+              className="btn-primary flex items-center gap-2"
             >
-              COPY TO CLIPBOARD
+              📋 Copy to Clipboard
             </button>
             <button
               onClick={handleGenerate}
-              className="brutal-btn brutal-btn-accent min-w-[200px]"
+              className="btn-outline flex items-center gap-2"
             >
-              REGENERATE VERSION
+              🔄 Regenerate
             </button>
           </div>
         </div>
@@ -99,47 +107,51 @@ export default function GeneratePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-10 tracking-tight uppercase">Generate A Post</h1>
+      <h1 className="text-3xl font-bold font-heading mb-8 text-heading">Generate A Post</h1>
 
-      <div className="brutal-card p-10 bg-white">
-        <h2 className="text-xl font-bold mb-6 uppercase flex items-center gap-2">
-          <span className="bg-accent px-2 py-0.5 border border-black text-sm">STEP 1</span>
-          What's the core idea?
-        </h2>
+      <div className="card p-8">
+        <div className="flex items-center gap-2 mb-5">
+          <span className="text-[10px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
+            STEP 1
+          </span>
+          <h2 className="text-lg font-bold text-heading">What&apos;s the core idea?</h2>
+        </div>
 
         <textarea
           value={idea}
           onChange={(e) => setIdea(e.target.value)}
-          className="brutal-input min-h-[300px] mb-10 font-body text-lg leading-relaxed"
+          className="brutal-input min-h-[260px] mb-8 text-[15px] leading-relaxed"
           placeholder="e.g., Working in Tier-2 cities is actually better for long-term wealth than moving to Bangalore..."
         />
 
         {loading ? (
-          <div className="p-8 border-4 border-black bg-gray-50 space-y-4">
-            <div className="flex items-center justify-between font-bold text-sm uppercase">
-              <span>Finding matching framework...</span>
-              <span className="animate-pulse">{step || "Generating..."}</span>
+          <div className="card p-6 bg-primary-light border-primary/20 space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-semibold text-primary">Finding matching framework...</span>
+              <span className="animate-pulse text-primary font-medium">{step || "Generating..."}</span>
             </div>
-            <div className="h-4 w-full bg-gray-200 border-2 border-black overflow-hidden">
-              <div className="h-full bg-accent loading-bar-fast"></div>
+            <div className="h-2.5 w-full bg-primary/10 rounded-full overflow-hidden">
+              <div className="h-full bg-primary rounded-full loading-bar-fast" />
             </div>
           </div>
         ) : error ? (
-          <div className="brutal-card p-6 bg-red-50 border-danger mb-8 group">
+          <div className="card p-5 bg-red-50 border-red-200">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-danger text-xl font-bold">✕</span>
-              <h3 className="text-danger font-bold uppercase">Generation Failed</h3>
+              <span className="text-red-500 text-lg">✕</span>
+              <h3 className="text-danger font-bold text-sm">Generation Failed</h3>
             </div>
-            <p className="text-danger/80 font-medium text-sm">{error}</p>
-            <button onClick={() => setError("")} className="mt-4 text-xs font-bold underline uppercase">Try Again</button>
+            <p className="text-danger/80 text-sm mb-3">{error}</p>
+            <button onClick={() => setError("")} className="text-xs font-semibold text-primary hover:underline">
+              Try Again
+            </button>
           </div>
         ) : (
           <button
             onClick={handleGenerate}
             disabled={!idea.trim()}
-            className="brutal-btn brutal-btn-accent w-full text-lg py-5 shadow-xl hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+            className="btn-primary w-full text-base py-4 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            ⚡ MATCH FRAMEWORK & GENERATE POST
+            ⚡ Match Framework & Generate Post
           </button>
         )}
       </div>

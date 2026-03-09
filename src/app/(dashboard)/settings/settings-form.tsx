@@ -97,18 +97,20 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-10 tracking-tight uppercase">Settings</h1>
+      <h1 className="text-3xl font-bold font-heading mb-8 text-heading">Settings</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 space-y-8">
-          <section className="brutal-card p-8 bg-white">
-            <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-              <span className="bg-accent px-2 py-0.5 border border-black text-sm">STEP 1</span>
-              GEMINI API CONFIGURATION
-            </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <section className="card p-8">
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[10px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
+                STEP 1
+              </span>
+              <h2 className="text-lg font-bold text-heading">Gemini API Configuration</h2>
+            </div>
 
-            <div className="mb-8">
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+            <div className="mb-6">
+              <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
                 Your API Key
               </label>
               <div className="relative">
@@ -116,47 +118,51 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
                   type={showKey ? "text" : "password"}
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  className="brutal-input pr-24 font-mono text-sm"
+                  className="brutal-input pr-20 font-mono text-sm"
                   placeholder={existingApiKey?.isValid ? "••••••••••••••••••••••••••••" : "Paste your AIzaSy... key here"}
                 />
                 <button
                   onClick={() => setShowKey(!showKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold underline uppercase opacity-50 hover:opacity-100"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-primary hover:text-primary-dark transition-colors"
                 >
                   {showKey ? "Hide" : "Show"}
                 </button>
               </div>
               {existingApiKey?.isValid && !apiKey && (
-                <p className="text-[10px] mt-2 text-gray-500 font-medium">
+                <p className="text-[11px] mt-2 text-muted">
                   Using currently saved key. Enter a new one to overwrite.
                 </p>
               )}
             </div>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={handleSave}
                 disabled={loading || !apiKey.trim()}
-                className="brutal-btn min-w-[140px]"
+                className="btn-primary disabled:opacity-40"
               >
-                {loading ? "SAVING..." : "UPDATE KEY"}
+                {loading ? "Saving..." : "Update Key"}
               </button>
               <button
                 onClick={handleTest}
                 disabled={loading}
-                className="brutal-btn brutal-btn-accent min-w-[140px]"
+                className="btn-outline"
               >
-                {loading ? "TESTING..." : "TEST CONNECTION"}
+                {loading ? "Testing..." : "Test Connection"}
               </button>
             </div>
 
             {status.message && (
-              <div className={`mt-8 p-4 border-2 border-black flex items-center gap-3 ${status.type === "error" ? "bg-red-50" : status.type === "success" ? "bg-green-50" : "bg-gray-50"
+              <div className={`mt-6 p-4 rounded-xl flex items-center gap-3 ${status.type === "error" ? "bg-red-50 border border-red-200" :
+                  status.type === "success" ? "bg-green-50 border border-green-200" :
+                    "bg-primary-light border border-primary/20"
                 }`}>
-                <span className="text-xl">
+                <span className="text-lg">
                   {status.type === "success" ? "✓" : status.type === "error" ? "✕" : "⏳"}
                 </span>
-                <p className={`font-bold text-sm ${status.type === "error" ? "text-danger" : status.type === "success" ? "text-green-700" : "text-gray-700"
+                <p className={`font-semibold text-sm ${status.type === "error" ? "text-danger" :
+                    status.type === "success" ? "text-green-700" :
+                      "text-primary"
                   }`}>
                   {status.message}
                 </p>
@@ -164,17 +170,17 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
             )}
           </section>
 
-          <section className="brutal-card p-8 bg-white">
-            <h2 className="text-xl font-bold mb-6">ACCOUNT PREFERENCES</h2>
+          <section className="card p-8">
+            <h2 className="text-lg font-bold mb-5 text-heading">Account Preferences</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
+                <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1">
                   Email Address
                 </label>
-                <p className="font-bold underline">sarthak199809@gmail.com</p>
+                <p className="font-semibold text-heading">{userId}@user</p>
               </div>
-              <div className="pt-4">
-                <button className="text-xs font-bold underline text-danger uppercase">
+              <div className="pt-3 border-t border-border">
+                <button className="text-xs font-semibold text-danger hover:text-red-700 transition-colors">
                   Delete Account & Data
                 </button>
               </div>
@@ -182,24 +188,24 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
           </section>
         </div>
 
-        <div className="space-y-6">
-          <div className="brutal-card p-6 bg-accent">
-            <h3 className="font-bold mb-3 uppercase text-sm">Need a key?</h3>
-            <p className="text-sm mb-4 leading-snug">
+        <div className="space-y-5">
+          <div className="card p-6 bg-gradient-to-br from-primary-light to-blue-50 border-primary/20">
+            <h3 className="font-bold mb-2 text-sm text-heading">Need a key?</h3>
+            <p className="text-xs text-body mb-4 leading-relaxed">
               You can get a free Gemini API key from the Google AI Studio.
             </p>
             <a
               href="https://aistudio.google.com/app/apikey"
               target="_blank"
-              className="brutal-btn bg-white text-black text-[10px] py-1 px-3 block text-center"
+              className="btn-primary text-xs py-2 px-4 block text-center"
             >
-              GET FREE KEY →
+              Get Free Key →
             </a>
           </div>
 
-          <div className="brutal-card p-6 bg-white">
-            <h3 className="font-bold mb-3 uppercase text-sm">Security</h3>
-            <p className="text-[11px] text-gray-500 leading-relaxed">
+          <div className="card p-6">
+            <h3 className="font-bold mb-2 text-sm text-heading">🔒 Security</h3>
+            <p className="text-[11px] text-body leading-relaxed">
               Your API keys are encrypted at rest and never shared with third parties. We only use them to process your requests to Google Gemini.
             </p>
           </div>

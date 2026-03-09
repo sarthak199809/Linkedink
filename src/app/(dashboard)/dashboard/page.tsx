@@ -28,74 +28,101 @@ export default async function DashboardPage() {
 
   return (
     <div>
+      {/* Welcome Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold font-heading text-heading">
+          Welcome back 👋
+        </h1>
+        <p className="text-body mt-1">Here&apos;s your content overview</p>
+      </div>
+
       {!hasApiKey && (
-        <div className="brutal-card p-6 mb-10 bg-accent border-black">
+        <div className="card p-6 mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
           <div className="flex items-center gap-3 mb-3">
-            <span className="text-2xl">⚠️</span>
-            <h2 className="text-xl font-bold uppercase">Action Required</h2>
+            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+              <span className="text-xl">⚠️</span>
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-heading">Setup Required</h2>
+              <p className="text-sm text-body">Add your Gemini API key to enable AI features.</p>
+            </div>
           </div>
-          <p className="mb-6 font-medium">
-            Your Gemini API key is missing or invalid. Please add it in settings to enable AI features.
-          </p>
-          <Link href="/settings" className="brutal-btn inline-block">
-            CONFIGURE API KEY
+          <Link href="/settings" className="btn-accent inline-flex items-center gap-2 text-sm mt-2">
+            Configure API Key
+            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h8M8 4l3 3-3 3" /></svg>
           </Link>
         </div>
       )}
 
       {frameworkCount === 0 ? (
-        <div className="brutal-card p-20 text-center flex flex-col items-center justify-center bg-white border-black">
-          <div className="text-8xl mb-8 opacity-20 select-none">░</div>
-          <h2 className="text-3xl font-bold mb-4 tracking-tight uppercase">Your library is empty</h2>
-          <p className="mb-10 text-gray-600 max-w-sm font-medium leading-relaxed">
+        <div className="card p-16 text-center flex flex-col items-center justify-center">
+          <div className="w-20 h-20 rounded-2xl bg-primary-light flex items-center justify-center mb-6">
+            <span className="text-4xl">📝</span>
+          </div>
+          <h2 className="text-2xl font-bold font-heading mb-3 text-heading">Your library is empty</h2>
+          <p className="mb-8 text-body max-w-sm leading-relaxed">
             Start your journey by adding a LinkedIn post to reverse-engineer into a reusable writing framework.
           </p>
-          <Link href="/frameworks/add" className="brutal-btn brutal-btn-accent shadow-xl hover:scale-105 transition-transform">
-            + ADD YOUR FIRST FRAMEWORK
+          <Link href="/frameworks/add" className="btn-primary text-base px-8 py-3 flex items-center gap-2">
+            <span>+</span> Add Your First Framework
           </Link>
         </div>
       ) : (
         <div className="max-w-4xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="brutal-card p-8 hover:-translate-x-1 hover:-translate-y-1 transition-transform cursor-default">
-              <h3 className="text-sm font-bold text-gray-500 mb-2 uppercase tracking-widest">Library Size</h3>
+          {/* Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            <div className="card p-6 hover:shadow-card-hover">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-primary-light flex items-center justify-center">
+                  <span className="text-xl">🔬</span>
+                </div>
+                <span className="text-sm font-semibold text-body uppercase tracking-wider">Library Size</span>
+              </div>
               <div className="flex items-baseline gap-2">
-                <p className="text-6xl font-bold tracking-tighter">{frameworkCount}</p>
-                <span className="font-bold text-gray-400">FRAMEWORKS</span>
+                <p className="text-5xl font-bold text-heading tracking-tight">{frameworkCount}</p>
+                <span className="font-semibold text-muted text-sm">frameworks</span>
               </div>
             </div>
-            <div className="brutal-card p-8 hover:translate-x-1 hover:-translate-y-1 transition-transform cursor-default">
-              <h3 className="text-sm font-bold text-gray-500 mb-2 uppercase tracking-widest">Output Total</h3>
+            <div className="card p-6 hover:shadow-card-hover">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-accent-light flex items-center justify-center">
+                  <span className="text-xl">⚡</span>
+                </div>
+                <span className="text-sm font-semibold text-body uppercase tracking-wider">Output Total</span>
+              </div>
               <div className="flex items-baseline gap-2">
-                <p className="text-6xl font-bold tracking-tighter">{postCount}</p>
-                <span className="font-bold text-gray-400">POSTS</span>
+                <p className="text-5xl font-bold text-heading tracking-tight">{postCount}</p>
+                <span className="font-semibold text-muted text-sm">posts</span>
               </div>
             </div>
           </div>
 
+          {/* Recent Posts */}
           {recentPosts.length > 0 && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold uppercase tracking-tight">Recent Creations</h2>
-                <Link href="/posts" className="text-sm font-bold underline hover:text-gray-600">VIEW ALL</Link>
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-xl font-bold font-heading text-heading">Recent Creations</h2>
+                <Link href="/posts" className="text-sm font-semibold text-primary hover:text-primary-dark transition-colors">
+                  View All →
+                </Link>
               </div>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {recentPosts.map((post) => (
-                  <div key={post.id} className="brutal-card p-6 hover:bg-gray-50 transition-colors group">
-                    <div className="flex justify-between items-start mb-4">
-                      <p className="font-medium flex-1 line-clamp-2 pr-4">{post.generatedPost}</p>
+                  <div key={post.id} className="card p-5 hover:shadow-card-hover group">
+                    <div className="flex justify-between items-start mb-3">
+                      <p className="text-sm font-medium text-heading flex-1 line-clamp-2 pr-4 leading-relaxed">{post.generatedPost}</p>
                       <CopyButton text={post.generatedPost} />
                     </div>
-                    <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                      <span className="brutal-tag text-[10px] bg-white">
+                    <div className="flex items-center gap-3 pt-3 border-t border-border">
+                      <span className="brutal-tag text-[10px]">
                         {post.framework.title}
                       </span>
                       {post.matchScore && (
-                        <span className="text-xs font-bold text-gray-400 uppercase tracking-tighter">
-                          Match: {Math.round(post.matchScore * 100)}%
+                        <span className="text-xs font-semibold text-muted">
+                          {Math.round(post.matchScore * 100)}% match
                         </span>
                       )}
-                      <span className="text-[10px] text-gray-400 font-medium ml-auto">
+                      <span className="text-[10px] text-muted font-medium ml-auto">
                         {new Date(post.createdAt).toLocaleDateString()}
                       </span>
                     </div>

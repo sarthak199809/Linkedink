@@ -37,17 +37,17 @@ export default function FrameworkList({ frameworks: initialFrameworks }: Props) 
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             {initialFrameworks.map((framework) => (
-                <div key={framework.id} className="brutal-card p-6 transition-transform hover:-translate-y-1">
+                <div key={framework.id} className="card p-6 hover:shadow-card-hover">
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                         <div className="flex-1">
-                            <h3 className="text-xl font-bold mb-2 uppercase tracking-tight">{framework.title}</h3>
-                            <p className="text-gray-700 mb-4 leading-relaxed">{framework.summary}</p>
+                            <h3 className="text-lg font-bold mb-2 text-heading">{framework.title}</h3>
+                            <p className="text-body text-sm mb-4 leading-relaxed">{framework.summary}</p>
                             {framework.bestFor && (
-                                <div className="mb-4">
-                                    <span className="font-bold text-sm uppercase text-gray-500 block mb-1">Best for</span>
-                                    <p className="text-sm font-medium">{framework.bestFor}</p>
+                                <div className="mb-3">
+                                    <span className="text-xs font-semibold text-muted uppercase tracking-wider">Best for</span>
+                                    <p className="text-sm font-medium text-heading mt-0.5">{framework.bestFor}</p>
                                 </div>
                             )}
                             <div className="flex gap-2 flex-wrap">
@@ -58,18 +58,18 @@ export default function FrameworkList({ frameworks: initialFrameworks }: Props) 
                                 ))}
                             </div>
                         </div>
-                        <div className="flex flex-row md:flex-col gap-3">
+                        <div className="flex flex-row md:flex-col gap-2">
                             <Link
                                 href={`/frameworks/${framework.id}`}
-                                className="brutal-btn text-center text-sm px-6"
+                                className="btn-primary text-center text-sm px-5 py-2"
                             >
-                                VIEW
+                                View
                             </Link>
                             <button
                                 onClick={() => handleDelete(framework.id)}
-                                className="brutal-btn brutal-btn-danger text-sm px-6"
+                                className="text-sm px-5 py-2 rounded-xl border border-red-200 text-danger font-semibold hover:bg-red-50 transition-colors"
                             >
-                                DELETE
+                                Delete
                             </button>
                         </div>
                     </div>

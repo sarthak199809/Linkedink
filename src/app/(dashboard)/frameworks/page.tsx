@@ -20,25 +20,27 @@ export default async function FrameworksPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-2">
-        <h1 className="text-4xl font-bold tracking-tight uppercase">Frameworks</h1>
-        <Link href="/frameworks/add" className="brutal-btn brutal-btn-accent">
-          + ADD NEW FRAMEWORK
+        <h1 className="text-3xl font-bold font-heading text-heading">Frameworks</h1>
+        <Link href="/frameworks/add" className="btn-primary text-sm flex items-center gap-2">
+          <span>+</span> Add Framework
         </Link>
       </div>
 
-      <div className="mb-10">
+      <div className="mb-8">
         <PromptEditorToggle />
       </div>
 
       {frameworks.length === 0 ? (
-        <div className="brutal-card p-16 text-center bg-white">
-          <div className="text-7xl mb-6 opacity-20 select-none">░</div>
-          <h2 className="text-2xl font-bold mb-4 uppercase">No Frameworks Yet</h2>
-          <p className="mb-8 text-gray-600 max-w-md mx-auto font-medium">
+        <div className="card p-14 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-primary-light flex items-center justify-center mx-auto mb-5">
+            <span className="text-3xl">🔬</span>
+          </div>
+          <h2 className="text-xl font-bold font-heading mb-3 text-heading">No Frameworks Yet</h2>
+          <p className="mb-6 text-body max-w-md mx-auto text-sm leading-relaxed">
             Your framework library is empty. Start by reverse-engineering a LinkedIn post to build your writing library.
           </p>
-          <Link href="/frameworks/add" className="brutal-btn">
-            + ADD YOUR FIRST FRAMEWORK
+          <Link href="/frameworks/add" className="btn-primary inline-flex items-center gap-2">
+            <span>+</span> Add Your First Framework
           </Link>
         </div>
       ) : (

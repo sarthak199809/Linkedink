@@ -1,31 +1,17 @@
 "use client";
 
-import { useState } from "react";
-
-interface CopyButtonProps {
-    text: string;
-    className?: string;
-}
-
-export default function CopyButton({ text, className }: CopyButtonProps) {
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = async () => {
-        try {
-            await navigator.clipboard.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error("Failed to copy:", err);
-        }
+export default function CopyButton({ text }: { text: string }) {
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        alert("Copied!");
     };
 
     return (
         <button
             onClick={handleCopy}
-            className={className || "brutal-btn text-xs py-2 px-4 whitespace-nowrap"}
+            className="text-xs font-semibold text-primary hover:text-primary-dark transition-colors px-3 py-1.5 rounded-lg hover:bg-primary-light flex items-center gap-1 flex-shrink-0"
         >
-            {copied ? "COPIED!" : "COPY TEXT"}
+            📋 Copy
         </button>
     );
 }

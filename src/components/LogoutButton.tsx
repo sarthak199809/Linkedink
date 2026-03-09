@@ -6,9 +6,9 @@ export default function LogoutButton() {
     return (
         <button
             onClick={() => signOut({ callbackUrl: "/Linkedink/login" })}
-            className="font-medium hover:underline text-danger"
+            className="text-sm font-medium text-body hover:text-danger transition-colors"
         >
-            LOGOUT
+            Logout
         </button>
     );
 }
