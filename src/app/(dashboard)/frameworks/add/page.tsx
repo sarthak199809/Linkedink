@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AddFrameworkPage() {
   const router = useRouter();
@@ -85,8 +86,9 @@ export default function AddFrameworkPage() {
         const data = await res.json();
         alert(data.error || "Failed to save");
       }
-    } catch {
-      alert("Something went wrong");
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Something went wrong while saving");
     }
 
     setLoading(false);
@@ -94,67 +96,81 @@ export default function AddFrameworkPage() {
 
   if (step === 2 && result) {
     return (
-      <div className="max-w-2xl">
-        <h1 className="text-3xl font-bold mb-8">REVIEW BEFORE SAVING</h1>
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold font-heading text-heading">Review Analysis</h1>
+          <p className="text-body mt-1">Review and refine the extracted framework before saving.</p>
+        </div>
 
-        <div className="brutal-card p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-bold mb-2">TITLE</label>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="brutal-input"
-            />
+        <div className="card p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">Framework Title</label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="brutal-input"
+                placeholder="e.g., Contrarian Storytelling"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">Tags (comma separated)</label>
+              <input
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="brutal-input"
+                placeholder="storytelling, growth, careers"
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2">SUMMARY</label>
+            <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">Summary</label>
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="brutal-input min-h-[80px]"
+              className="brutal-input min-h-[100px]"
+              placeholder="What makes this post style effective?"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2">BEST FOR</label>
+            <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">Best For</label>
             <input
               value={bestFor}
               onChange={(e) => setBestFor(e.target.value)}
               className="brutal-input"
+              placeholder="e.g., Personal brand building"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold mb-2">TAGS (comma separated)</label>
-            <input
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="brutal-input"
-              placeholder="contrarian, storytelling, career"
-            />
+            <label className="block text-sm font-semibold text-muted uppercase tracking-wider mb-2">Extracted Framework Data</label>
+            <div className="bg-gray-50 rounded-xl p-4 border border-border text-xs font-mono overflow-auto max-h-64 leading-relaxed text-body">
+              <pre>{JSON.stringify(result, null, 2)}</pre>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-bold mb-2">FULL FRAMEWORK</label>
-            <pre className="bg-gray-100 p-4 border-2 border-black text-xs overflow-auto max-h-64">
-              {JSON.stringify(result, null, 2)}
-            </pre>
-          </div>
-
-          <div className="flex gap-4 pt-4">
-            <button
-              onClick={() => router.push("/frameworks")}
-              className="brutal-btn brutal-btn-danger"
-            >
-              DISCARD
-            </button>
+          <div className="flex flex-wrap gap-4 pt-4">
             <button
               onClick={handleSave}
               disabled={loading}
-              className="brutal-btn"
+              className="btn-primary min-w-[160px]"
             >
-              {loading ? "SAVING..." : "SAVE FRAMEWORK"}
+              {loading ? "Saving..." : "Save to Library"}
+            </button>
+            <button
+              onClick={() => setStep(0)}
+              className="btn-outline"
+            >
+              Back to Input
+            </button>
+            <button
+              onClick={() => router.push("/frameworks")}
+              className="text-sm font-semibold text-danger px-4 hover:underline"
+            >
+              Discard
             </button>
           </div>
         </div>
@@ -164,55 +180,60 @@ export default function AddFrameworkPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-10 tracking-tight uppercase">Add New Framework</h1>
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold font-heading text-heading">Add New Framework</h1>
+        <p className="text-body mt-2">Scale your writing by reverse-engineering high-performing content.</p>
+      </div>
 
-      <div className="brutal-card p-10 bg-white">
-        <h2 className="text-xl font-bold mb-8 uppercase flex items-center gap-2">
-          <span className="bg-accent px-2 py-0.5 border border-black text-sm">STEP 1</span>
-          Input LinkedIn Source
-        </h2>
+      <div className="card p-8 bg-white">
+        <div className="flex items-center gap-2 mb-8">
+          <span className="text-[10px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
+            STEP 1
+          </span>
+          <h2 className="text-lg font-bold text-heading">Input LinkedIn Source</h2>
+        </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="flex gap-4 mb-8">
           <button
             onClick={() => setMode("url")}
-            className={`brutal-btn flex items-center justify-center gap-2 ${mode === "url" ? "bg-black text-white" : "bg-white text-black border-2 border-black opacity-60"}`}
+            className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${mode === "url" ? "bg-primary text-white shadow-btn" : "bg-gray-50 text-body border border-border hover:bg-white"}`}
           >
-            <span>🔗</span> PASTE URL
+            <span>🔗</span> Paste URL
           </button>
           <button
             onClick={() => setMode("text")}
-            className={`brutal-btn flex items-center justify-center gap-2 ${mode === "text" ? "bg-black text-white" : "bg-white text-black border-2 border-black opacity-60"}`}
+            className={`flex-1 py-3 px-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${mode === "text" ? "bg-primary text-white shadow-btn" : "bg-gray-50 text-body border border-border hover:bg-white"}`}
           >
-            <span>📝</span> PASTE POST TEXT
+            <span>📝</span> Paste Text
           </button>
         </div>
 
-        <div className="mb-10">
-          <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+        <div className="mb-8">
+          <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
             {mode === "url" ? "LinkedIn Post URL" : "LinkedIn Post Content"}
           </label>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="brutal-input min-h-[250px] font-body text-base leading-relaxed mb-6"
+            className="brutal-input min-h-[250px] font-body text-[15px] leading-relaxed mb-6"
             placeholder={
               mode === "url"
                 ? "https://www.linkedin.com/posts/..."
-                : " अर्जुन ने 2021 में इंदौर शिफ्ट होने का फैसला किया...\n(Paste the full text of the post here)"
+                : "Paste the full text of the post here..."
             }
           />
 
-          <div className="mb-6">
+          <div>
             <button
               onClick={() => setShowPromptEditor(!showPromptEditor)}
-              className="text-xs font-bold uppercase tracking-widest flex items-center gap-2 hover:underline"
+              className="text-xs font-bold text-primary flex items-center gap-2 hover:underline tracking-wider uppercase"
             >
               {showPromptEditor ? "▼ Hide Prompt Editor" : "▶ Configure AI Analysis Prompt"}
             </button>
 
             {showPromptEditor && (
-              <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
+              <div className="mt-4 animate-fade-in">
+                <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
                   Base Prompt (Overrides default for this analysis)
                 </label>
                 <textarea
@@ -221,8 +242,8 @@ export default function AddFrameworkPage() {
                   className="brutal-input min-h-[200px] text-sm font-mono bg-gray-50"
                   placeholder="Enter custom analysis prompt here..."
                 />
-                <p className="text-[10px] text-gray-500 mt-2">
-                  * Changes here only apply to this specific analysis. To change the global default, go to the Frameworks page.
+                <p className="text-[10px] text-muted mt-2">
+                  * Changes here only apply to this specific analysis.
                 </p>
               </div>
             )}
@@ -230,25 +251,25 @@ export default function AddFrameworkPage() {
         </div>
 
         {loading ? (
-          <div className="p-8 border-4 border-black bg-gray-50 space-y-4">
-            <div className="flex items-center justify-between font-bold text-sm uppercase">
-              <span>Reverse Engineering in progress</span>
-              <span className="animate-pulse">Processing...</span>
+          <div className="card p-8 bg-primary-light border-primary/20 space-y-4">
+            <div className="flex items-center justify-between font-bold text-primary text-sm uppercase">
+              <span>Deeply analyzing patterns...</span>
+              <span className="animate-pulse">Processing</span>
             </div>
-            <div className="h-4 w-full bg-gray-200 border-2 border-black overflow-hidden">
-              <div className="h-full bg-accent loading-bar-fast"></div>
+            <div className="h-2.5 w-full bg-primary/10 rounded-full overflow-hidden">
+              <div className="h-full bg-primary rounded-full loading-bar-fast"></div>
             </div>
-            <p className="text-xs text-gray-500 font-medium text-center">
-              Our AI is analyzing the structure, hook, and micro-techniques of this post.
+            <p className="text-xs text-primary/70 font-medium text-center italic">
+              Our AI is dissecting the hook, structure, and psychological triggers.
             </p>
           </div>
         ) : (
           <button
             onClick={handleReverseEngineer}
             disabled={!input.trim()}
-            className="brutal-btn brutal-btn-accent w-full text-lg py-5 shadow-xl hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+            className="btn-primary w-full text-base py-4 flex items-center justify-center gap-2 shadow-btn hover:shadow-btn-hover"
           >
-            ⚡ REVERSE ENGINEER THIS POST
+            ⚡ Match Patterns & Extract Framework
           </button>
         )}
       </div>

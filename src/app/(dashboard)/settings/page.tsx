@@ -16,5 +16,5 @@ export default async function SettingsPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  return <SettingsForm userId={session.user.id} existingApiKey={apiKey} />;
+  return <SettingsForm userId={session.user.id} email={session.user.email} existingApiKey={apiKey} />;
 }

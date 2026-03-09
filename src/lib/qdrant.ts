@@ -18,10 +18,24 @@ export async function initializeQdrant() {
     if (!exists) {
       await qdrantClient.createCollection(COLLECTION_NAME, {
         vectors: {
-          size: 3072,
+          size: 768,
           distance: "Cosine",
         },
       });
+    } else {
+      // Check for dimension mismatch
+      const info = await qdrantClient.getCollection(COLLECTION_NAME);
+      const currentSize = (info.config.params.vectors as any).size;
+      if (currentSize !== 768) {
+        console.warn(`Dimension mismatch: expected 768, found ${currentSize}. Recreating collection...`);
+        await qdrantClient.deleteCollection(COLLECTION_NAME);
+        await qdrantClient.createCollection(COLLECTION_NAME, {
+          vectors: {
+            size: 768,
+            distance: "Cosine",
+          },
+        });
+      }
     }
   } catch (error) {
     console.error("Failed to initialize Qdrant:", error);

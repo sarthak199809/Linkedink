@@ -12,10 +12,11 @@ interface ApiKey {
 
 interface Props {
   userId: string;
+  email?: string | null;
   existingApiKey: ApiKey | null;
 }
 
-export default function SettingsForm({ userId, existingApiKey }: Props) {
+export default function SettingsForm({ userId, email, existingApiKey }: Props) {
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [loading, setLoading] = useState(false);
@@ -154,15 +155,15 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
 
             {status.message && (
               <div className={`mt-6 p-4 rounded-xl flex items-center gap-3 ${status.type === "error" ? "bg-red-50 border border-red-200" :
-                  status.type === "success" ? "bg-green-50 border border-green-200" :
-                    "bg-primary-light border border-primary/20"
+                status.type === "success" ? "bg-green-50 border border-green-200" :
+                  "bg-primary-light border border-primary/20"
                 }`}>
                 <span className="text-lg">
                   {status.type === "success" ? "✓" : status.type === "error" ? "✕" : "⏳"}
                 </span>
                 <p className={`font-semibold text-sm ${status.type === "error" ? "text-danger" :
-                    status.type === "success" ? "text-green-700" :
-                      "text-primary"
+                  status.type === "success" ? "text-green-700" :
+                    "text-primary"
                   }`}>
                   {status.message}
                 </p>
@@ -177,7 +178,7 @@ export default function SettingsForm({ userId, existingApiKey }: Props) {
                 <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-1">
                   Email Address
                 </label>
-                <p className="font-semibold text-heading">{userId}@user</p>
+                <p className="font-semibold text-heading">{email || `${userId}@user`}</p>
               </div>
               <div className="pt-3 border-t border-border">
                 <button className="text-xs font-semibold text-danger hover:text-red-700 transition-colors">
