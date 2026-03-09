@@ -12,7 +12,7 @@ services:
       # Updated the hostname from 'db' to 'linkedink-db'
       - DATABASE_URL=postgresql://postgres:postgres@linkedink-db:5432/linkedink
       - QDRANT_URL=http://qdrant:6333
-      - NEXTAUTH_URL=https://yourdomain.com/Linkedink # Update this to your actual domain if using Caddy
+      - NEXTAUTH_URL=https://portfolio.sarthakpm.online/Linkedink
     depends_on:
       - linkedink-db
       - qdrant
@@ -44,6 +44,7 @@ services:
 volumes:
   linkedink_db_data:
   linkedink_qdrant_data:
+
 
 networks:
   n8n-docker_default:
