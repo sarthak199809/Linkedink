@@ -26,7 +26,11 @@ export async function DELETE(
       where: { id: params.id },
     });
 
-    await deleteFrameworkFromQdrant(params.id);
+    try {
+      await deleteFrameworkFromQdrant(params.id);
+    } catch (qErr) {
+      console.warn("Failed to delete from Qdrant, but Prisma delete succeeded:", qErr);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

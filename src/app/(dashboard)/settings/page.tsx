@@ -11,10 +11,28 @@ export default async function SettingsPage() {
     return null;
   }
 
-  const apiKey = await prisma.apiKey.findFirst({
+  const apiKeyData = await prisma.apiKey.findFirst({
     where: { userId: session.user.id, provider: "gemini" },
     orderBy: { createdAt: "desc" },
   });
 
-  return <SettingsForm userId={session.user.id} email={session.user.email} existingApiKey={apiKey} />;
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      preferredGenerationModel: true,
+      preferredEmbeddingModel: true,
+    },
+  });
+
+  return (
+    <SettingsForm
+      userId={session.user.id}
+      email={session.user.email}
+      existingApiKey={apiKeyData}
+      preferences={{
+        generationModel: user?.preferredGenerationModel || "gemini-2.5-pro",
+        embeddingModel: user?.preferredEmbeddingModel || "gemini-embedding-001",
+      }}
+    />
+  );
 }

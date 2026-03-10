@@ -13,6 +13,8 @@ model User {
   email          String          @unique
   password       String
   name           String?
+  preferredGenerationModel String @default("gemini-2.5-pro")
+  preferredEmbeddingModel  String @default("gemini-embedding-001")
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   apiKeys        ApiKey[]

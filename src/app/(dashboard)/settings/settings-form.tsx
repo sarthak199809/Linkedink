@@ -14,13 +14,33 @@ interface Props {
   userId: string;
   email?: string | null;
   existingApiKey: ApiKey | null;
+  preferences: {
+    generationModel: string;
+    embeddingModel: string;
+  };
 }
 
-export default function SettingsForm({ userId, email, existingApiKey }: Props) {
+const GENERATION_MODELS = [
+  { id: "gemini-2.5-pro", name: "Gemini 2.5 Pro (Best Quality)" },
+  { id: "gemini-2.0-flash", name: "Gemini 2.0 Flash (Fast & Modern)" },
+  { id: "gemini-1.5-pro", name: "Gemini 1.5 Pro" },
+  { id: "gemini-1.5-flash-latest", name: "Gemini 1.5 Flash (Reliable)" },
+  { id: "gemini-pro-latest", name: "Gemini Pro (Legacy)" },
+];
+
+const EMBEDDING_MODELS = [
+  { id: "gemini-embedding-001", name: "Gemini Embedding 001 (Recommended)" },
+  { id: "text-embedding-004", name: "Text Embedding 004 (Experimental)" },
+];
+
+export default function SettingsForm({ userId, email, existingApiKey, preferences }: Props) {
   const router = useRouter();
   const [apiKey, setApiKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [showKey, setShowKey] = useState(false);
+  const [generationModel, setGenerationModel] = useState(preferences.generationModel);
+  const [embeddingModel, setEmbeddingModel] = useState(preferences.embeddingModel);
+  const [savingPrefs, setSavingPrefs] = useState(false);
   const [status, setStatus] = useState<{
     type: "success" | "error" | "testing" | "";
     message: string;
@@ -169,6 +189,82 @@ export default function SettingsForm({ userId, email, existingApiKey }: Props) {
                 </p>
               </div>
             )}
+          </section>
+
+          <section className="card p-8">
+            <div className="flex items-center gap-2 mb-6">
+              <span className="text-[10px] font-bold text-primary bg-primary-light px-3 py-1 rounded-full">
+                STEP 2
+              </span>
+              <h2 className="text-lg font-bold text-heading">Model Selection</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div>
+                <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
+                  Content Generation Model
+                </label>
+                <select
+                  value={generationModel}
+                  onChange={(e) => setGenerationModel(e.target.value)}
+                  className="brutal-input text-sm"
+                >
+                  {GENERATION_MODELS.map(m => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </select>
+                <p className="text-[10px] mt-2 text-muted leading-relaxed">
+                  Used for post generation and analysis. Pro models provide better quality.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
+                  Embedding Model
+                </label>
+                <select
+                  value={embeddingModel}
+                  onChange={(e) => setEmbeddingModel(e.target.value)}
+                  className="brutal-input text-sm"
+                >
+                  {EMBEDDING_MODELS.map(m => (
+                    <option key={m.id} value={m.id}>{m.name}</option>
+                  ))}
+                </select>
+                <p className="text-[10px] mt-2 text-muted leading-relaxed italic">
+                  Note: Changing this will reset your vector database next time you save a framework.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={async () => {
+                setSavingPrefs(true);
+                try {
+                  const res = await fetch("/Linkedink/api/settings/preferences", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      preferredGenerationModel: generationModel,
+                      preferredEmbeddingModel: embeddingModel,
+                    }),
+                  });
+                  if (res.ok) {
+                    setStatus({ type: "success", message: "Model preferences saved!" });
+                    router.refresh();
+                  } else {
+                    setStatus({ type: "error", message: "Failed to save model preferences" });
+                  }
+                } catch {
+                  setStatus({ type: "error", message: "System error saving preferences" });
+                }
+                setSavingPrefs(false);
+              }}
+              disabled={savingPrefs || (generationModel === preferences.generationModel && embeddingModel === preferences.embeddingModel)}
+              className="btn-primary disabled:opacity-40"
+            >
+              {savingPrefs ? "Saving..." : "Save Preferences"}
+            </button>
           </section>
 
           <section className="card p-8">

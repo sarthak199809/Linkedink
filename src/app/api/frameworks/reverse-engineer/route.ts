@@ -29,6 +29,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No valid API key found. Add one in Settings." }, { status: 400 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { preferredGenerationModel: true }
+    });
+
     let activePromptContent = promptText;
 
     if (!activePromptContent) {
@@ -42,7 +47,7 @@ export async function POST(req: Request) {
       console.log(`[ReverseEngineer] Using manually provided prompt override`);
     }
 
-    const result = await generateWithGemini(finalInput, userApiKey.apiKey, activePromptContent);
+    const result = await generateWithGemini(finalInput, userApiKey.apiKey, activePromptContent, user?.preferredGenerationModel);
 
     let framework;
     try {

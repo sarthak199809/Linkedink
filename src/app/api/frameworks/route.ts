@@ -22,8 +22,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No valid API key found" }, { status: 400 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { preferredEmbeddingModel: true }
+    });
+
     const embedText = title + " " + summary + " " + bestFor + " " + (tags || []).join(" ");
-    const embedding = await getEmbeddings(embedText, userApiKey.apiKey);
+    const embedding = await getEmbeddings(embedText, userApiKey.apiKey, user?.preferredEmbeddingModel);
 
     const framework = await prisma.framework.create({
       data: {

@@ -22,7 +22,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No valid API key found. Add one in Settings." }, { status: 400 });
     }
 
-    const embedding = await getEmbeddings(idea, userApiKey.apiKey);
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { preferredGenerationModel: true, preferredEmbeddingModel: true }
+    });
+
+    const embedding = await getEmbeddings(idea, userApiKey.apiKey, user?.preferredEmbeddingModel);
 
     const searchResults = await searchFrameworks(session.user.id, embedding, 2);
 
@@ -43,7 +48,7 @@ export async function POST(req: Request) {
     }
 
     const fullData = framework.fullData as Record<string, unknown>;
-    
+
     const systemPrompt = `You are an expert LinkedIn post writer. Use this framework to write a post:
 
 Framework: ${framework.title}
@@ -66,7 +71,7 @@ Requirements:
 - Include a strong hook
 - End with engagement`;
 
-    const generatedPost = await generateWithGemini(userPrompt, userApiKey.apiKey, systemPrompt);
+    const generatedPost = await generateWithGemini(userPrompt, userApiKey.apiKey, systemPrompt, user?.preferredGenerationModel);
 
     const savedPost = await prisma.generatedPost.create({
       data: {
@@ -84,8 +89,11 @@ Requirements:
       score: matchScore,
       id: savedPost.id,
     });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to generate post" }, { status: 500 });
+  } catch (error: any) {
+    console.error("[PostGenerationError]:", error);
+    return NextResponse.json({
+      error: error.message || "Failed to generate post",
+      details: error.toString()
+    }, { status: 500 });
   }
 }

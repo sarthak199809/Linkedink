@@ -1,8 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export async function getEmbeddings(text: string, apiKey: string): Promise<number[]> {
+export async function getEmbeddings(text: string, apiKey: string, modelName: string = "gemini-embedding-001"): Promise<number[]> {
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+  const model = genAI.getGenerativeModel({ model: modelName });
 
   const result = await model.embedContent(text);
   const embedding = result.embedding;
@@ -13,11 +13,12 @@ export async function getEmbeddings(text: string, apiKey: string): Promise<numbe
 export async function generateWithGemini(
   prompt: string,
   apiKey: string,
-  systemInstruction?: string
+  systemInstruction?: string,
+  modelName: string = "gemini-2.5-pro"
 ): Promise<string> {
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
-    model: "gemini-flash-latest"
+    model: modelName
   });
 
   const fullPrompt = systemInstruction
